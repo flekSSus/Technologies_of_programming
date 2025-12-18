@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>АИС "Обслуживание заказов и доставка товара"</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-title">
+      <span class="logo">AIS</span>
+      <div>
+        <h1 class="app-title">АИС "Обслуживание заказов клиентов и доставка товара"</h1>
+        <p class="app-subtitle">SPA-прототип интерфейса</p>
+      </div>
+    </div>
+
+    <div class="header-bottom-row">
+      <nav class="app-nav" aria-label="Основная навигация">
+        <a href="#home" class="nav-link">Главная</a>
+        <a href="#orders" class="nav-link">Заказы</a>
+        <a href="#search" class="nav-link">Поиск / просмотр</a>
+        <a href="#admin" class="nav-link">Администрирование</a>
+        <a href="#auth" class="nav-link">Вход</a>
+        <a href="#error" class="nav-link nav-link--danger">Ошибка</a>
+      </nav>
+      <div class="current-user" id="current-user" aria-label="Текущий пользователь">
+        Не авторизован
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- Главная форма -->
+    <section id="home" class="view view--active" aria-labelledby="home-title">
+      <header class="view-header">
+        <h2 id="home-title">Главная</h2>
+        <p class="view-description">
+          Это главная страница SPA-приложения. Ниже приведены ссылки на основные сценарии работы.
+        </p>
+      </header>
+
+      <article class="card-grid">
+        <section class="card">
+          <h3>Работа с заказами</h3>
+          <p>
+            Управление жизненным циклом заказа: создание, редактирование, удаление, смена статуса, назначение доставки.
+          </p>
+          <button type="button" class="btn btn-primary" id="home-orders-btn">Перейти к заказам</button>
+        </section>
+
+        <section class="card">
+          <h3>Поиск и просмотр</h3>
+          <p>
+            Просмотр списка заказов с фильтрацией, сортировкой и постраничной навигацией.
+          </p>
+          <button type="button" class="btn btn-secondary" id="home-search-btn">
+            Открыть поиск
+          </button>
+        </section>
+
+        <section class="card">
+          <h3>Администрирование пользователей</h3>
+          <p>
+            Создание, редактирование и блокировка учетных записей пользователей системы.
+          </p>
+          <button type="button" class="btn btn-outline" id="home-admin-btn">
+            Перейти в раздел администратора
+          </button>
+        </section>
+
+        <section class="card">
+          <h3>Авторизация</h3>
+          <p>
+            Вход в систему для сотрудников колл-центра, логистов и администратора.
+          </p>
+          <button type="button" class="btn btn-secondary" id="home-auth-btn">
+            Войти в систему
+          </button>
+        </section>
+      </article>
+    </section>
+
+    <!-- Форма авторизации -->
+    <section id="auth" class="view" aria-labelledby="auth-title">
+      <header class="view-header">
+        <h2 id="auth-title">Форма авторизации</h2>
+      </header>
+
+      <form class="form" id="auth-form" aria-label="Форма авторизации">
+        <div class="form-row">
+          <label for="auth-login">Логин или e-mail</label>
+          <input id="auth-login" type="email" placeholder="user@example.com" />
+        </div>
+
+        <div class="form-row">
+          <label for="auth-password">Пароль</label>
+          <input id="auth-password" type="password" placeholder="Введите пароль" />
+        </div>
+
+        <div class="form-row form-row--inline">
+          <label class="checkbox">
+            <input type="checkbox" />
+            <span>Запомнить меня</span>
+          </label>
+          <button type="submit" class="btn btn-primary">Sign In</button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Формы добавления / редактирования / удаления заказа -->
+    <section id="orders" class="view" aria-labelledby="orders-title">
+      <header class="view-header">
+        <h2 id="orders-title">Управление заказами</h2>
+      </header>
+
+      <div class="layout-two-columns">
+        <section class="card">
+          <h3>Список заказов</h3>
+
+          <div class="list-controls">
+            <div class="btn-group" aria-label="Сортировка">
+              <span class="btn-group-title">Сортировка:</span>
+              <button type="button" class="btn btn-small" data-sort="id" data-order="asc">По ID ↑</button>
+              <button type="button" class="btn btn-small" data-sort="id" data-order="desc">По ID ↓</button>
+              <button type="button" class="btn btn-small" data-sort="deliveryDate" data-order="asc">По дате заказа ↑</button>
+              <button type="button" class="btn btn-small" data-sort="deliveryDate" data-order="desc">По дате заказа ↓</button>
+              <button type="button" class="btn btn-small" data-sort="status" data-order="asc">По статусу</button>
+            </div>
+
+            <div class="btn-group" aria-label="Фильтрация">
+              <span class="btn-group-title">Фильтр:</span>
+              <button type="button" class="btn btn-small" data-filter-status="active">Только активные</button>
+              <button type="button" class="btn btn-small" data-filter-status="done">Доставленные</button>
+              <button type="button" class="btn btn-small" data-filter-status="all">Все</button>
+            </div>
+          </div>
+
+          <!-- Контейнер: список заказов будет рендериться JavaScript'ом -->
+          <div class="order-list" id="orders-list" aria-label="Список заказов">
+            <!-- Здесь изначально пусто. JS добавит строки заказов. -->
+          </div>
+
+          <div class="pagination" id="orders-pagination">
+            <!-- Пагинация также управляется JavaScript'ом -->
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Добавление / редактирование заказа</h3>
+
+          <!-- Эта форма пока служит как визуальный макет.
+               Вторая часть лабы "оживляет" её через View и глобальные функции -->
+          <form class="form" id="order-form" aria-label="Форма редактирования заказа">
+            <div class="form-row form-row--inline">
+              <div class="form-field">
+                <label for="order-id">ID заказа</label>
+                <input id="order-id" type="text" placeholder="(генерируется автоматически)" disabled />
+              </div>
+              <div class="form-field">
+                <label for="order-status">Статус</label>
+                <select id="order-status">
+                  <option>Новый</option>
+                  <option>Подтвержден</option>
+                  <option>В доставке</option>
+                  <option>Доставлен</option>
+                  <option>Отменен</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="order-client">Клиент</label>
+              <input id="order-client" type="text" placeholder="Название организации или ФИО" />
+            </div>
+
+            <div class="form-row">
+              <label for="order-address">Адрес доставки</label>
+              <textarea id="order-address" rows="2" placeholder="Город, улица, дом, офис"></textarea>
+            </div>
+
+            <div class="form-row form-row--inline">
+              <div class="form-field">
+                <label for="order-city">Город</label>
+                <input id="order-city" type="text" placeholder="Например, Москва" />
+              </div>
+              <div class="form-field">
+                <label for="order-price">Сумма заказа (₽)</label>
+                <input id="order-price" type="number" min="0" step="100" placeholder="Например, 15000" />
+              </div>
+            </div>
+
+            <div class="form-row form-row--inline">
+              <div class="form-field">
+                <label for="order-product">Товар</label>
+                <input id="order-product" type="text" placeholder="Наименование товара" />
+              </div>
+              <div class="form-field">
+                <label for="order-qty">Количество</label>
+                <input id="order-qty" type="number" min="1" value="1" />
+              </div>
+            </div>
+
+            <div class="form-row form-row--inline">
+              <div class="form-field">
+                <label for="order-date">Дата доставки</label>
+                <input id="order-date" type="date" />
+              </div>
+              <div class="form-field">
+                <label for="order-method">Способ доставки</label>
+                <select id="order-method">
+                  <option>Курьер</option>
+                  <option>Самовывоз</option>
+                  <option>Транспортная компания</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="order-comment">Комментарий</label>
+              <textarea id="order-comment" rows="2" placeholder="Дополнительная информация для курьера"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Сохранить заказ</button>
+              <button type="button" class="btn btn-outline" id="order-new-btn">Создать новый заказ</button>
+              <button type="button" class="btn btn-danger" id="order-delete-btn">Удалить заказ</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <!-- Форма поиска / просмотра информации -->
+    <section id="search" class="view" aria-labelledby="search-title">
+      <header class="view-header">
+        <h2 id="search-title">Поиск и просмотр заказов</h2>
+      </header>
+
+      <form class="form" id="search-form" aria-label="Форма поиска заказов">
+        <div class="form-row form-row--inline">
+          <div class="form-field">
+            <label for="search-text">Клиент / адрес / ID</label>
+            <input id="search-text" type="text" placeholder="Поиск по имени клиента, ID заказа или части адреса" />
+          </div>
+
+          <div class="form-field">
+            <label for="search-status">Статус заказа</label>
+            <select id="search-status">
+              <option value="">Любой</option>
+              <option value="Новый">Новый</option>
+              <option value="Подтвержден">Подтвержден</option>
+              <option value="В доставке">В доставке</option>
+              <option value="Доставлен">Доставлен</option>
+              <option value="Отменен">Отменен</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row form-row--inline">
+          <div class="form-field">
+            <label for="search-date-from">Дата доставки с</label>
+            <input id="search-date-from" type="date" />
+          </div>
+          <div class="form-field">
+            <label for="search-date-to">по</label>
+            <input id="search-date-to" type="date" />
+          </div>
+          <div class="form-field">
+            <label for="search-method">Способ доставки</label>
+            <select id="search-method">
+              <option value="">Любой</option>
+              <option value="Курьер">Курьер</option>
+              <option value="Самовывоз">Самовывоз</option>
+              <option value="Транспортная компания">Транспортная компания</option>
+            </select>
+          </div>
+        </div>
+
+      </form>
+
+      <section class="card">
+        <h3>Результаты поиска</h3>
+
+        <!-- Контейнер: сюда JavaScript будет выводить результаты поиска по ObjInf -->
+        <div class="order-list order-list--compact" id="search-results" aria-label="Результаты поиска">
+          <!-- Изначально пусто. JS добавит найденные заказы. -->
+        </div>
+
+        <div class="pagination" id="search-pagination">
+          <!-- Пагинация результатов поиска управляется JavaScript'ом -->
+        </div>
+      </section>
+    </section>
+
+    <!-- Форма администратора -->
+    <section id="admin" class="view" aria-labelledby="admin-title">
+      <header class="view-header">
+        <h2 id="admin-title">Администрирование пользователей</h2>
+      </header>
+
+      <div class="layout-two-columns">
+        <section class="card">
+          <h3>Список пользователей</h3>
+
+          <div class="user-list" id="admin-user-list" aria-label="Список пользователей">
+            <!-- Заполняется JavaScript-ом -->
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Форма пользователя</h3>
+
+          <form class="form" id="admin-user-form" aria-label="Форма редактирования пользователя">
+            <div class="form-row">
+              <label for="user-login">Логин</label>
+              <input id="user-login" type="text" placeholder="user123" />
+            </div>
+
+            <div class="form-row">
+              <label for="user-role">Роль</label>
+              <select id="user-role">
+                <option>Администратор</option>
+                <option>Оператор</option>
+                <option>Логист</option>
+                <option>Курьер</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="user-status">Статус</label>
+              <select id="user-status">
+                <option>Активен</option>
+                <option>Заблокирован</option>
+                <option>Требует смены пароля</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="user-password">Новый пароль</label>
+              <input id="user-password" type="password" placeholder="(опционально)" />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Сохранить пользователя</button>
+              <button type="button" class="btn btn-outline" id="admin-user-new">Создать нового</button>
+              <button type="button" class="btn btn-danger" id="admin-user-delete">Удалить пользователя</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <!-- Форма ошибки -->
+    <section id="error" class="view" aria-labelledby="error-title">
+      <header class="view-header view-header--center">
+        <h2 id="error-title">Ошибка</h2>
+        <p class="error-code">404 / 500</p>
+        <p class="view-description">
+          Произошла ошибка при выполнении операции (например, не найден заказ, ошибка авторизации или недоступен
+          сервер).
+        </p>
+      </header>
+
+      <section class="card card--center">
+        <p class="error-message">
+          "Something went wrong". Пожалуйста, попробуйте ещё раз или обратитесь к администратору.
+        </p>
+
+        <div class="form-actions form-actions--center">
+          <a href="#home" class="btn btn-primary">На главную</a>
+          <a href="#orders" class="btn btn-outline">К списку заказов</a>
+          <a href="#auth" class="btn btn-secondary">Перейти к форме входа</a>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-left">
+      <p>АИС "Обслуживание заказов клиентов и доставка товара"</p>
+      <p class="footer-sub">
+        Прототип интерфейса (SPA). Верстальщик: Кривда, Русак, Стасевич.
+      </p>
+    </div>
+    <div class="footer-right"></div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
